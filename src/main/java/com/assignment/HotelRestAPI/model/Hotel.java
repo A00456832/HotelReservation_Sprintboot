@@ -23,32 +23,7 @@ public class Hotel {
 
     private int starRating;
 
-    @Column(nullable = true, length = 300)
-    private String amenities;
-
-        @Column(nullable = true)
-        private int noDaysBooked;
-
-        @Column(nullable = true)
-        private int FinalCost;
-
-
-         public int getnoDaysBooked() {
-            return noDaysBooked;
-        }
-
-        public void setnoDaysBooked(int noDaysBooked) {
-            this.noDaysBooked = noDaysBooked;
-        }
-
-        public int getFinalCost() {
-            return FinalCost;
-        }
-
-        public void setFinalCost(int FinalCost) {
-            this.FinalCost = FinalCost;
-        }
-
+    private boolean isAvailable;
 
     public Long getId() {
         return id;
@@ -90,11 +65,11 @@ public class Hotel {
         this.starRating = starRating;
     }
 
-    public String getAmenities() {
-        return amenities;
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
-    public void setAmenities(String amenities) {
-        this.amenities = amenities;
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

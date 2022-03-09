@@ -45,7 +45,6 @@ public class HotelController {
     public ResponseEntity<HotelRes> saveHotel(@RequestBody Hotel hotel) {
         HotelRes hotelRes = new HotelRes();
         try{
-            hotel.setFinalCost(hotel.getPrice()*hotel.getnoDaysBooked());
             Hotel newHotel = hotelRepository.save(hotel);
             hotelRes.setHotel(newHotel);
             hotelRes.setMessage("Successfully Created by id : " + newHotel.getId());
