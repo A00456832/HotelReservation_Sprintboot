@@ -6,7 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "reservation")
@@ -16,11 +18,13 @@ public class Reservation {
     @GeneratedValue
     private Long id;
 
-//    private Long hotelId;
-
     @ManyToOne
     @JoinColumn(name="hotel_id", nullable=false)
     private Hotel hotel;
+
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name = "reservation_id")
+    List<Guest> guestList = new ArrayList<>();
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date checkinDate;
@@ -80,11 +84,11 @@ public class Reservation {
         this.reservationDateTime = reservationDateTime;
     }
 
-//    public Long getHotelId() {
-//        return hotelId;
-//    }
-//
-//    public void setHotelId(Long hotelId) {
-//        this.hotelId = hotelId;
-//    }
+    public List<Guest> getGuestList() {
+        return guestList;
+    }
+
+    public void setGuestList(List<Guest> guestList) {
+        this.guestList = guestList;
+    }
 }
