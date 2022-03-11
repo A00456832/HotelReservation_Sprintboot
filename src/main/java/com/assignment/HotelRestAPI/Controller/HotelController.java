@@ -19,6 +19,7 @@ public class HotelController {
     @Autowired
     HotelRepository hotelRepository;
 
+    // Below function is used to fetch the Hotel by id
     @GetMapping(path="/{id}")
     public ResponseEntity<HotelRes> getHotelName(@PathVariable Long id) {
         HotelRes hotelRes = new HotelRes();
@@ -33,6 +34,7 @@ public class HotelController {
         }
     }
 
+    // Below function is used to fetch all the hotels.
     @GetMapping
     public ResponseEntity<List<Hotel>> getHotelName() {
         HotelListRes hotelListRes = new HotelListRes();
@@ -41,10 +43,13 @@ public class HotelController {
         return new ResponseEntity(hotelListRes, HttpStatus.OK);
     }
 
+    // Below function is written to save the hotel instance. By default, its IsAvailable flag is set to true.
+    // Hotel Id is auto incremented and it is returned as a response.
     @PostMapping
     public ResponseEntity<HotelRes> saveHotel(@RequestBody Hotel hotel) {
         HotelRes hotelRes = new HotelRes();
         try{
+            hotel.setAvailable(true);
             Hotel newHotel = hotelRepository.save(hotel);
             hotelRes.setHotel(newHotel);
             hotelRes.setMessage("Successfully Created by id : " + newHotel.getId());

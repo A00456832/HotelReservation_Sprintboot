@@ -9,7 +9,7 @@ import javax.persistence.*;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Guest {
     @Id
-    @GeneratedValue
+    @GeneratedValue     // Auto incremented column
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -20,10 +20,6 @@ public class Guest {
 
     @Column(nullable = false, length = 30)
     private String gender;
-
-//    @ManyToOne
-//    @JoinColumn(name="reservation_id", nullable=false)
-//    private Reservation reservation;
 
     public Long getId() {
         return id;
@@ -56,12 +52,4 @@ public class Guest {
     public void setGender(String gender) {
         this.gender = gender;
     }
-
-//    public Reservation getReservation() {
-//        return reservation;
-//    }
-//
-//    public void setReservation(Reservation reservation) {
-//        this.reservation = reservation;
-//    }
 }

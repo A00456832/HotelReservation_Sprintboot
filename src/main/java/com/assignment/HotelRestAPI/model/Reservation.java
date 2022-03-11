@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,24 +16,26 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Reservation {
     @Id
-    @GeneratedValue
+    @GeneratedValue     // Auto incremented identity column
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="hotel_id", nullable=false)
+    @JoinColumn(name="hotel_id", nullable=false) // One hotel can have many reservations
     private Hotel hotel;
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
     List<Guest> guestList = new ArrayList<>();
+    // Reservation can have guest list. guest.reservationId is FK to reservation.id
 
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date checkinDate;
+    private LocalDate checkinDate;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date checkoutDate;
+    private LocalDate checkoutDate;
 
     private float totalPrice;
+    // To store the total cost of the stay. Total Price = ((Checkout date) - (Checkin date) ) * (Price per day)
 
     private LocalDateTime reservationDateTime;
 
@@ -44,24 +47,20 @@ public class Reservation {
         this.id = id;
     }
 
-    public Date getCheckinDate() {
+    public LocalDate getCheckinDate() {
         return checkinDate;
     }
 
-    public void setCheckinDate(Date checkinDate) {
+    public void setCheckinDate(LocalDate checkinDate) {
         this.checkinDate = checkinDate;
     }
 
-    public Date getCheckoutDate() {
+    public LocalDate getCheckoutDate() {
         return checkoutDate;
     }
 
-    public void setCheckoutDate(Date checkoutDate) {
+    public void setCheckoutDate(LocalDate checkoutDate) {
         this.checkoutDate = checkoutDate;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
     }
 
     public void setHotel(Hotel hotel) {
