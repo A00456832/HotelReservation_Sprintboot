@@ -15,6 +15,7 @@ The hotel reservation app provides handful of GET, POST, DELETE apis to maintain
         a. Checkout date must be less than checkin date
         b. Either of checkin date or checkout date must not be null
         c. Minimum 1 guest must be included while making a reservation
+	d. Overlapping of reservation is not allowed
 
 
 **_Screencapture are provided in the 'screenshots' directory._**
