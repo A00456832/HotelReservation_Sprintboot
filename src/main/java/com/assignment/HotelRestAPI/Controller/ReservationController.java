@@ -73,6 +73,7 @@ public class ReservationController {
             // Reservation is made against hotel. Technically, reservation.hotelId is FK to the hotel.Id
             // So we have to fetch the corresponding hotel and pass to the reservation.setHotel method.
             Hotel hotel = hotelRepository.findById(hotelId).get();
+            hotel.setAvailable(false);
             reservation.setHotel(hotel);
 
             // To implment complex requirement where Total Price of the stay needs to be calculated using...
@@ -80,11 +81,9 @@ public class ReservationController {
             // Below code performs the same calculation using standard Period class.
             Period actualStayInDays = Period.between(reservation.getCheckinDate(), reservation.getCheckoutDate());
             reservation.setTotalPrice(hotel.getPrice() * actualStayInDays.getDays());
-
             // Save the instance of reservation
             Reservation newRes = reservationRepository.save(reservation);
             reservationRes.setReservation(newRes);
-            hotel.setAvailable(false);
 
             reservationRes.setMessage("Successfully Created by id : " + newRes.getId());
             return new ResponseEntity<>(reservationRes,HttpStatus.CREATED);
