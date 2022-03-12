@@ -3,6 +3,8 @@ package com.assignment.HotelRestAPI.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "hotel")
@@ -10,7 +12,7 @@ import javax.persistence.*;
 public class Hotel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue // Auto incremented
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -21,34 +23,13 @@ public class Hotel {
     @Column(nullable = false, length = 100)
     private String city;
 
+    @OneToMany(cascade=CascadeType.ALL) // FK to Reservation.Hotel_Id and has 1:Many relationship
+    @JoinColumn(name = "hotel_id")
+    List<Reservation> reservationList = new ArrayList<>();
+
     private int starRating;
 
-    @Column(nullable = true, length = 300)
-    private String amenities;
-
-        @Column(nullable = true)
-        private int noDaysBooked;
-
-        @Column(nullable = true)
-        private int FinalCost;
-
-
-         public int getnoDaysBooked() {
-            return noDaysBooked;
-        }
-
-        public void setnoDaysBooked(int noDaysBooked) {
-            this.noDaysBooked = noDaysBooked;
-        }
-
-        public int getFinalCost() {
-            return FinalCost;
-        }
-
-        public void setFinalCost(int FinalCost) {
-            this.FinalCost = FinalCost;
-        }
-
+    private boolean isAvailable; // This flag is used to maintain the availability of the hotel.
 
     public Long getId() {
         return id;
@@ -90,11 +71,19 @@ public class Hotel {
         this.starRating = starRating;
     }
 
-    public String getAmenities() {
-        return amenities;
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
-    public void setAmenities(String amenities) {
-        this.amenities = amenities;
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 }
