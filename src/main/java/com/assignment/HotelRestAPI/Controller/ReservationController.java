@@ -41,7 +41,6 @@ public class ReservationController {
     }
 
     // Below function is used to make a reservation by Hotel Id.
-
     @PostMapping(path = "/{hotelId}")
     public ResponseEntity<ReservationRes> saveReservation(@PathVariable Long hotelId, @RequestBody Reservation reservation) {
         ReservationRes reservationRes = new ReservationRes();
