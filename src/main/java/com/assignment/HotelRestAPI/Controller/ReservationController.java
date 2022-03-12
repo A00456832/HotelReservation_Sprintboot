@@ -11,8 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -20,7 +24,8 @@ import java.util.Optional;
 public class ReservationController {
 
     @Autowired
-    ReservationRepository reservationRepository;
+    private ReservationRepository reservationRepository;
+    private EntityManager entityManager;
 
     @Autowired
     HotelRepository hotelRepository;
@@ -67,15 +72,31 @@ public class ReservationController {
                     return new ResponseEntity<>(reservationRes,HttpStatus.NOT_ACCEPTABLE);
             }
 
+            // Get existing reservations of the hotelId mentioned in the request.
+            // Compare the checkin date with the existing reservation checkin and checkout date.
+            // If new checkin date is between above 2 dates then return an error stating this reservation is not allowed.
+            Hotel hotel = hotelRepository.findById(hotelId).get();
+            for(Reservation hotelReservation : hotel.getReservationList()) {
+                System.out.println(hotelReservation.getCheckinDate() + " - > " + hotelReservation.getCheckoutDate());
+
+                LocalDate newCheckinDate = reservation.getCheckinDate();
+                LocalDate oldCheckinDate = hotelReservation.getCheckinDate();
+                LocalDate oldCheckoutDate = hotelReservation.getCheckoutDate();
+                if(newCheckinDate.isEqual(oldCheckinDate) || newCheckinDate.isEqual(oldCheckoutDate) ||  (newCheckinDate.isAfter(oldCheckinDate) && newCheckinDate.isBefore(oldCheckoutDate))) {
+                    reservationRes.setMessage("Given checkin date is overlapping with existing booking.");
+                    return new ResponseEntity<>(reservationRes,HttpStatus.NOT_ACCEPTABLE);
+                }
+            }
+
             // As an audit, the timestamp is captured whenever reservation is made
             reservation.setReservationDateTime(LocalDateTime.now());
 
             // Reservation is made against hotel. Technically, reservation.hotelId is FK to the hotel.Id
             // So we have to fetch the corresponding hotel and pass to the reservation.setHotel method.
-            Hotel hotel = hotelRepository.findById(hotelId).get();
+            hotel.setAvailable(false);
             reservation.setHotel(hotel);
 
-            // To implment complex requirement where Total Price of the stay needs to be calculated using...
+            // To implement complex requirement where Total Price of the stay needs to be calculated using...
             // TotalPrice = Hotel.Price  * (Checkout date - Checkin date)
             // Below code performs the same calculation using standard Period class.
             Period actualStayInDays = Period.between(reservation.getCheckinDate(), reservation.getCheckoutDate());
@@ -84,7 +105,6 @@ public class ReservationController {
             // Save the instance of reservation
             Reservation newRes = reservationRepository.save(reservation);
             reservationRes.setReservation(newRes);
-            hotel.setAvailable(false);
 
             reservationRes.setMessage("Successfully Created by id : " + newRes.getId());
             return new ResponseEntity<>(reservationRes,HttpStatus.CREATED);
