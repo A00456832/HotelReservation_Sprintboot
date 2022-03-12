@@ -107,27 +107,9 @@ OUTPUT:
     }
 }
 ```
-**4. GET: specific hotel details**
+## Reservation:
 
-API CALL: http://localhost:8090/hotel/1
-
-OUTPUT:
-```json
-{
-    "message": "Successfully retrived : 1",
-    "hotel": {
-        "id": 1,
-        "name": "Good Hotel",
-        "price": 400,
-        "city": "Mumbai",
-        "reservationList": [],
-        "starRating": 3,
-        "available": true
-    }
-}
-```
-
-**5. POST: To make a reservation against specific hotel**
+**4. POST: To make a reservation against specific hotel**
 
 API CALL: http://localhost:8090/reservation/12
 
@@ -173,7 +155,7 @@ OUTPUT:
     }
 }
 ```
-**6. GET: Reservation details for specific reservation id**
+**5. GET: Reservation details for specific reservation id**
 
 API CALL: http://localhost:8090/reservation/13
 
@@ -204,7 +186,7 @@ OUTPUT:
     }
 }
 ```
-**7. DELETE: Remove the reservation**
+**6. DELETE: Remove the reservation**
 
 API CALL: http://localhost:8090/reservation/36
 
@@ -223,7 +205,7 @@ If we provide non-existent reservation id then below response will be shown:
 }
 ```
 
-**8. POST - Custom error Handling: While making a reservation, checkout date can not be prior to checkin date.**
+**7. POST - Custom error Handling: While making a reservation, checkout date can not be prior to checkin date.**
 
 API CALL: http://localhost:8090/reservation/24
 
