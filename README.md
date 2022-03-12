@@ -5,20 +5,20 @@ By Imtiyaz Shaikh (A00456832)
 The hotel reservation app provides handful of GET, POST, DELETE apis to maintain the hotel reservation system using MySQL database. 
 
 ## Complexity:
-1. 3 Modeles with 1:Many relationship
-        a. Hotel
-        b. Reservation : 1 Hotel can have many Reservations
-        c. Guest       : 1 Reservation can have many guest
-2. The model calculates the 'finalPrice' and then inserts into the database. Formula: finalPrice = (price per day) * ( (Checkout day) - (Checkin day) )
-3 Cascaded delete funtionality is used
+1. Implemented Three modeles
+	* Hotel
+	* Reservation : 1 Hotel can have many Reservations
+	* Guest       : 1 Reservation can have many guest
+2. The model calculates the 'finalPrice' and then inserts into the database. 
+	* Formula: finalPrice = (price per day) * ( (Checkout day) - (Checkin day) )
+3. Cascaded delete funtionality is used
 4. Custom error scenarios implemented
-        a. Checkout date must be less than checkin date
-        b. Either of checkin date or checkout date must not be null
-        c. Minimum 1 guest must be included while making a reservation
-	d. Overlapping of reservation is not allowed
+	* Checkout date must be less than checkin date
+	* Either of checkin date or checkout date must not be null
+	* Minimum 1 guest must be included while making a reservation
+	* Overlapping of reservation is not allowed
 
-
-**_Screencapture are provided in the 'screenshots' directory._**
+**🔴Screencapture are provided in the 'screenshots' directory.🔴**
 
 ## HOTEL:
 **1. POST : To add Hotel entry**
