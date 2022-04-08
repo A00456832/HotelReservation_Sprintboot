@@ -11,12 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,23 +23,22 @@ public class ReservationController {
 
     @Autowired
     private ReservationRepository reservationRepository;
-    private EntityManager entityManager;
 
     @Autowired
     HotelRepository hotelRepository;
 
     // Below function is used to fetch the reservation by its id
     @GetMapping(path="/{id}")
-    public ResponseEntity<ReservationRes> getReservationById(@PathVariable Long id) {
+    public Reservation getReservationById(@PathVariable Long id) {
         ReservationRes reservationRes = new ReservationRes();
         try {
             Optional<Reservation> reservation = reservationRepository.findById(id);
             reservationRes.setReservation(reservation.get());
             reservationRes.setMessage("Successfully retrived : " + id);
-            return new ResponseEntity<>(reservationRes, HttpStatus.OK);
+            return reservationRes.getReservation();
         }catch (Exception e) {
             reservationRes.setMessage(e.getMessage());
-            return new ResponseEntity<>(reservationRes, HttpStatus.NOT_FOUND);
+            return reservationRes.getReservation();
         }
     }
 
@@ -59,7 +56,7 @@ public class ReservationController {
             }
 
             // Return error when checkout date is prior to checkin date along with suitable HTTP status code
-            if (reservation.getCheckinDate().compareTo(reservation.getCheckoutDate())>= 0)
+            if (reservation.getCheckinDate().compareTo(reservation.getCheckoutDate())> 0)
             {
                     reservationRes.setMessage("Error: Checkout date can not be prior to checkin date.");
                     return new ResponseEntity<>(reservationRes,HttpStatus.NOT_ACCEPTABLE);
@@ -100,7 +97,7 @@ public class ReservationController {
             // TotalPrice = Hotel.Price  * (Checkout date - Checkin date)
             // Below code performs the same calculation using standard Period class.
             Period actualStayInDays = Period.between(reservation.getCheckinDate(), reservation.getCheckoutDate());
-            reservation.setTotalPrice(hotel.getPrice() * actualStayInDays.getDays());
+            reservation.setTotalPrice(hotel.getPrice() * (actualStayInDays.getDays()+1));
 
             // Save the instance of reservation
             Reservation newRes = reservationRepository.save(reservation);

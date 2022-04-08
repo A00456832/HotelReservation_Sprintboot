@@ -36,11 +36,16 @@ public class HotelController {
 
     // Below function is used to fetch all the hotels.
     @GetMapping
-    public ResponseEntity<List<Hotel>> getHotelName() {
+    public ResponseEntity<List<Hotel>> getHotelName(@RequestParam(required = false) Boolean isAvailable) {
         HotelListRes hotelListRes = new HotelListRes();
-        hotelListRes.setHotels(hotelRepository.findAll());
+        if (isAvailable != null) {
+            hotelListRes.setHotels(hotelRepository.getAvailableHotelList(isAvailable));
+        } else {
+            hotelListRes.setHotels(hotelRepository.findAll());
+        }
         hotelListRes.setMessage("Successfully retrived");
-        return new ResponseEntity(hotelListRes, HttpStatus.OK);
+        return new ResponseEntity(hotelListRes.getHotels(), HttpStatus.OK);
+        
     }
 
     // Below function is written to save the hotel instance. By default, its IsAvailable flag is set to true.
